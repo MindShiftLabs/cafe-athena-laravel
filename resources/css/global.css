@@ -1,0 +1,7 @@
+/* Global Styles */
+:root {
+    --primary-color: #333;
+}
+body {
+    font-family: sans-serif;
+}
