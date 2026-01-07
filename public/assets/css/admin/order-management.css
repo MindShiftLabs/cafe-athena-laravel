@@ -1,0 +1,74 @@
+.order-table-container {
+  background-color: var(--text-light);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.order-table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.order-table-container th,
+.order-table-container td {
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.order-table-container th {
+  background-color: #f8f8f8;
+  font-weight: 600;
+}
+
+.order-table-container tr:last-child td {
+  border-bottom: none;
+}
+
+.action-links a {
+  color: var(--coffee-medium);
+  text-decoration: none;
+  margin-right: 10px;
+  font-weight: 600;
+}
+
+.action-links a:hover {
+  color: var(--coffee-dark);
+}
+
+.no-orders {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.order-table-container table td.status {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.status.completed {
+  color: #2e7d32;
+}
+.status.pending {
+  color: #f57c00;
+}
+.status.cancelled {
+  color: #c62828;
+}
+.status.preparing {
+  color: #1976d2;
+}
+.status.ready {
+  color: #388e3c;
+}
+
+.status.paid {
+  color: #2e7d32;
+}
+
+.status.unpaid {
+  color: #c62828;
+}

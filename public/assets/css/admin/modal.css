@@ -1,0 +1,117 @@
+:root {
+  --primary-text-color: #4b3d3a;
+  --accent-color: #b87333;
+  --white: #ffffff;
+  --border-color: #dee2e6;
+  --text-muted: #6c757d;
+}
+
+.modal {
+  display: none; /* Hidden by default, changed to flex in JS */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+  overflow: hidden;
+  /* For centering */
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  position: relative;
+  background-color: #ffffff;
+  padding: 30px;
+  border: none;
+  width: 50%;
+  max-width: 600px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.close {
+  color: #aaa;
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 32px;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #333;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 1.5rem;
+  color: var(--primary-text-color);
+}
+
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content label {
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: var(--primary-text-color);
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  padding: 12px;
+  margin-top: 5px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.modal-content input:focus,
+.modal-content textarea:focus,
+.modal-content select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(184, 115, 51, 0.2); /* Use accent color with transparency */
+}
+
+.modal-content button {
+  margin-top: 25px;
+  padding: 12px;
+  background-color: var(--accent-color);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.modal-content button:hover {
+  background-color: var(--primary-text-color);
+}
+
+.modal-content .close-modal {
+  background-color: var(--text-muted);
+}
+
+.modal-content .close-modal:hover {
+  background-color: var(--primary-text-color);
+}
