@@ -1,0 +1,115 @@
+:root {
+  --primary-text-color: #4b3d3a; /* Dark brown for main text/headings */
+  --secondary-text-color: #e8d8b0; /* Creamy beige for subtle text/elements */
+  --accent-color: #b87333; /* Copper for buttons, hovers, icons */
+  --background-light: #f8f9fa; /* Very light gray for main content background */
+  --white: #ffffff; /* Pure white for card/sidebar backgrounds */
+  --border-color: #dee2e6; /* Light gray for borders */
+  --text-muted: #6c757d; /* Muted gray for secondary text */
+}
+
+/* Tab container */
+.tabs {
+  overflow: hidden;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 20px;
+}
+
+/* Style the buttons inside the tab */
+.tabs button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 1rem;
+  color: var(--text-muted);
+  border-radius: 5px 5px 0 0;
+}
+
+/* Change background color of buttons on hover */
+.tabs button:hover {
+  background-color: #f1f1f1;
+}
+
+/* Create an active/current tablink class */
+.tabs button.active {
+  background-color: var(--white);
+  color: var(--primary-text-color);
+  border-top: 2px solid var(--accent-color);
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--white);
+}
+
+/* Style the tab content */
+.tab-content {
+  display: none;
+}
+
+.settings-container .card {
+  background-color: var(--white);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+}
+
+.settings-container .card h2 {
+  margin-top: 0;
+  margin-bottom: 25px;
+  font-size: 1.5rem;
+  color: var(--primary-text-color);
+}
+
+.settings-container form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--primary-text-color);
+}
+
+.settings-container form input[type="text"],
+.settings-container form input[type="date"],
+.settings-container form input[type="password"],
+.settings-container form textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+.settings-container form input[type="text"]:focus,
+.settings-container form input[type="date"]:focus,
+.settings-container form input[type="password"]:focus,
+.settings-container form textarea:focus {
+  border-color: var(--accent-color);
+  outline: none;
+}
+
+.settings-container form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.settings-container form button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--accent-color);
+  color: var(--white);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.settings-container form button:hover {
+  background-color: var(--primary-text-color);
+}
