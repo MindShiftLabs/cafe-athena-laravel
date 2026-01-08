@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <title>Settings - Café Athena</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="{{ asset('assets/css/admin/admin-dashboard.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/css/admin/settings.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/barista/barista-dashboard.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/barista/settings.css') }}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
   <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
   <script src="{{ asset('assets/js/toast.js') }}"></script>
@@ -20,18 +20,16 @@
     </div>
     <div class="sidebar-menu">
       <ul>
-        <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Overview</a></li>
-        <li><a href="{{ route('admin.users') }}"><i class="fas fa-users"></i> Users</a></li>
-        <li><a href="{{ route('admin.products') }}"><i class="fas fa-box"></i> Products</a></li>
-        <li><a href="{{ route('admin.orders') }}"><i class="fas fa-shopping-cart"></i> Orders</a></li>
-        <li><a href="{{ route('admin.settings') }}" class="active"><i class="fas fa-cog"></i> Settings</a></li>
+        <li><a href="{{ route('barista.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Overview</a></li>
+        <li><a href="{{ route('barista.orders') }}"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+        <li><a href="{{ route('barista.products') }}"><i class="fas fa-box"></i> Products</a></li>
+        <li><a href="{{ route('barista.settings') }}" class="active"><i class="fas fa-cog"></i> Settings</a></li>
       </ul>
     </div>
-
     @if ($coffeeOfTheDay)
       <div class="coffee-of-the-day-card-sidebar">
         <div class="card-image">
-          <img src="{{ asset($coffeeOfTheDay->product_image) }}"
+          <img src="{{ url($coffeeOfTheDay->product_image) }}"
             alt="{{ $coffeeOfTheDay->product_name }}">
         </div>
         <div class="card-info">
@@ -58,7 +56,6 @@
 
     <div class="settings-container">
       <div class="tabs">
-        {{-- Tabs controlled by simple JS --}}
         <button class="tab-link active" onclick="openTab(event, 'edit-profile')">Edit Profile</button>
         <button class="tab-link" onclick="openTab(event, 'change-password')">Change Password</button>
       </div>
@@ -66,10 +63,9 @@
       <div id="edit-profile" class="tab-content" style="display: block;">
         <div class="card">
           <h2>Edit Profile</h2>
-          <form action="{{ route('admin.settings.update-profile') }}" method="POST">
+          <form action="{{ route('barista.settings.update-profile') }}" method="POST">
             @csrf
             @method('PUT')
-            
             <label for="firstname">First Name:</label>
             <input type="text" id="firstname" name="user_firstname"
               value="{{ old('user_firstname', $user->user_firstname) }}" required>
@@ -86,8 +82,7 @@
               value="{{ old('user_birthday', $user->user_birthday) }}">
 
             <label for="phone">Phone:</label>
-            <input type="text" id="phone" name="user_phone"
-              value="{{ old('user_phone', $user->user_phone) }}">
+            <input type="text" id="phone" name="user_phone" value="{{ old('user_phone', $user->user_phone) }}">
 
             <label for="address">Address:</label>
             <textarea id="address" name="user_address">{{ old('user_address', $user->user_address) }}</textarea>
@@ -100,10 +95,9 @@
       <div id="change-password" class="tab-content" style="display: none;">
         <div class="card">
           <h2>Change Password</h2>
-          <form action="{{ route('admin.settings.change-password') }}" method="POST">
+          <form action="{{ route('barista.settings.change-password') }}" method="POST">
             @csrf
             @method('PUT')
-            
             <label for="current_password">Current Password:</label>
             <input type="password" id="current_password" name="current_password" required>
 
@@ -147,31 +141,34 @@
         }).showToast();
       }
     }
-
+    
     function toastError(message) {
       if (typeof Toastify === 'function') {
-        Toastify({
+         Toastify({
             text: message,
             duration: 3000,
             close: true,
             gravity: "top",
             position: "right",
-            backgroundColor: "#ff5f6d",
-        }).showToast();
+            backgroundColor: "#d32f2f",
+         }).showToast();
       }
     }
 
     @if(session('success'))
       toastSuccess("{{ session('success') }}");
     @endif
-
+    
+    @if(session('error'))
+      toastError("{{ session('error') }}");
+    @endif
+    
     @if($errors->any())
-      @foreach ($errors->all() as $error)
-        toastError("{{ $error }}");
-      @endforeach
+        @foreach($errors->all() as $error)
+            toastError("{{ $error }}");
+        @endforeach
     @endif
   </script>
 
 </body>
-
 </html>

@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Order;
-use Illuminate\Support\Facades\Auth;
+use App\Models\OrderItem;
 use Illuminate\Support\Facades\Hash;
 
-class AdminController extends Controller
+class BaristaController extends Controller
 {
     public function dashboard()
     {
@@ -23,104 +24,46 @@ class AdminController extends Controller
         $newOrdersCount = Order::whereDate('order_createdat', now()->toDateString())
             ->count();
 
-        // Total Customers
-        $totalCustomers = User::where('user_role', 'customer')->count();
+        // Pending Orders
+        $pendingOrdersCount = Order::where('order_status', 'pending')
+            ->count();
 
-        // Total Staff
-        $totalStaff = User::whereIn('user_role', ['admin', 'barista'])->count();
+        // Total Products (Products in Stock)
+        $totalProducts = Product::count();
 
         // 2. Coffee of the Day (Consistent per Session)
         $coffeeOfTheDay = $this->getCoffeeOfTheDay();
 
-        // 3. Recent Registrations
-        $recentRegistrations = User::where('user_role', 'customer')
-            ->orderBy('user_id', 'desc')
+        // 3. Recent Orders
+        $recentOrders = Order::with('user')
+            ->orderBy('order_createdat', 'desc')
             ->limit(5)
             ->get();
 
-        return view('admin.dashboard', [
+        // Transform for view if needed, but Eloquent models work directly in Blade
+        // We'll pass the models directly.
+        // Note: The view expects user properties on the order object if it was a join.
+        // With Eloquent 'with', we access via $order->user->user_firstname.
+        // Let's quickly check the view to see if we need to flatten it or update the view.
+        // resources/views/barista/dashboard.blade.php uses $order->user_firstname.
+        // We should map it to keep the view working without changes, or update the view.
+        // Updating the controller to output flat structure is safer for now to avoid view changes.
+        
+        $recentOrdersFlat = $recentOrders->map(function($order) {
+            $order->user_firstname = $order->user->user_firstname;
+            $order->user_lastname = $order->user->user_lastname;
+            return $order;
+        });
+
+        return view('barista.dashboard', [
             'totalRevenue' => $totalRevenue,
             'newOrdersCount' => $newOrdersCount,
-            'totalCustomers' => $totalCustomers,
-            'totalStaff' => $totalStaff,
+            'pendingOrdersCount' => $pendingOrdersCount,
+            'totalProducts' => $totalProducts,
             'coffeeOfTheDay' => $coffeeOfTheDay,
-            'recentRegistrations' => $recentRegistrations,
+            'recentOrders' => $recentOrdersFlat,
             'username' => Auth::user()->user_firstname
         ]);
-    }
-
-    // --- USER MANAGEMENT ---
-
-    public function users(Request $request)
-    {
-        $query = User::query();
-
-        if ($request->has('search') && $request->search != '') {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('user_firstname', 'like', "%{$search}%")
-                  ->orWhere('user_lastname', 'like', "%{$search}%")
-                  ->orWhere('user_email', 'like', "%{$search}%");
-            });
-        }
-
-        $users = $query->orderBy('user_createdat', 'desc')->get();
-
-        $coffeeOfTheDay = $this->getCoffeeOfTheDay();
-
-        return view('admin.users', [
-            'users' => $users,
-            'coffeeOfTheDay' => $coffeeOfTheDay,
-            'username' => Auth::user()->user_firstname
-        ]);
-    }
-
-    public function storeUser(Request $request)
-    {
-        $request->validate([
-            'firstname' => 'required|string|max:100',
-            'lastname' => 'required|string|max:100',
-            'email' => 'required|email|unique:user,user_email',
-            'password' => 'required|string|min:6',
-            'role' => 'required|in:admin,barista,customer',
-        ]);
-
-        User::create([
-            'user_firstname' => $request->firstname,
-            'user_lastname' => $request->lastname,
-            'user_email' => $request->email,
-            'user_password' => Hash::make($request->password),
-            'user_role' => $request->role,
-        ]);
-
-        return redirect()->route('admin.users')->with('success', 'User added successfully.');
-    }
-
-    public function updateUser(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
-
-        $request->validate([
-            'firstname' => 'required|string|max:100',
-            'lastname' => 'required|string|max:100',
-            'email' => 'required|email|unique:user,user_email,' . $id . ',user_id',
-            'role' => 'required|in:admin,barista,customer',
-        ]);
-
-        $user->update([
-            'user_firstname' => $request->firstname,
-            'user_lastname' => $request->lastname,
-            'user_email' => $request->email,
-            'user_role' => $request->role,
-        ]);
-
-        return redirect()->route('admin.users')->with('success', 'User updated successfully.');
-    }
-
-    public function destroyUser($id)
-    {
-        User::destroy($id);
-        return redirect()->route('admin.users')->with('success', 'User deleted successfully.');
     }
 
     // --- PRODUCT MANAGEMENT ---
@@ -136,10 +79,9 @@ class AdminController extends Controller
         }
 
         $products = $query->orderBy('product_id', 'desc')->get();
-
         $coffeeOfTheDay = $this->getCoffeeOfTheDay();
 
-        return view('admin.products', [
+        return view('barista.products', [
             'products' => $products,
             'coffeeOfTheDay' => $coffeeOfTheDay,
             'username' => Auth::user()->user_firstname
@@ -168,7 +110,7 @@ class AdminController extends Controller
             'product_category' => $request->category,
         ]);
 
-        return redirect()->route('admin.products')->with('success', 'Product added successfully.');
+        return redirect()->route('barista.products')->with('success', 'Product added successfully.');
     }
 
     public function updateProduct(Request $request, $id)
@@ -186,7 +128,6 @@ class AdminController extends Controller
         $imagePath = $product->product_image;
 
         if ($request->hasFile('image')) {
-            // Delete old image if it exists
             if (file_exists(public_path($imagePath))) {
                 @unlink(public_path($imagePath));
             }
@@ -202,7 +143,7 @@ class AdminController extends Controller
             'product_category' => $request->category,
         ]);
 
-        return redirect()->route('admin.products')->with('success', 'Product updated successfully.');
+        return redirect()->route('barista.products')->with('success', 'Product updated successfully.');
     }
 
     public function destroyProduct($id)
@@ -216,7 +157,7 @@ class AdminController extends Controller
             $product->delete();
         }
 
-        return redirect()->route('admin.products')->with('success', 'Product deleted successfully.');
+        return redirect()->route('barista.products')->with('success', 'Product deleted successfully.');
     }
 
     public function toggleProductStock(Request $request)
@@ -249,26 +190,6 @@ class AdminController extends Controller
         $image->move(public_path($targetDir), $imageName);
 
         return $targetDir . "/" . $imageName;
-    }
-
-    // Helper to get consistent Coffee of the Day per session
-    private function getCoffeeOfTheDay()
-    {
-        $productId = session('coffee_of_the_day_id');
-        $product = null;
-
-        if ($productId) {
-            $product = Product::find($productId);
-        }
-
-        if (!$product) {
-            $product = Product::inRandomOrder()->first();
-            if ($product) {
-                session(['coffee_of_the_day_id' => $product->product_id]);
-            }
-        }
-
-        return $product;
     }
 
     // --- ORDER MANAGEMENT ---
@@ -308,12 +229,21 @@ class AdminController extends Controller
 
         $orders = $query->get();
 
+        // Flatten for view compatibility
+        $orders->transform(function($order) {
+            $order->user_firstname = $order->user->user_firstname;
+            $order->user_lastname = $order->user->user_lastname;
+            return $order;
+        });
+
         $coffeeOfTheDay = $this->getCoffeeOfTheDay();
 
-        return view('admin.orders', [
+        return view('barista.orders', [
             'orders' => $orders,
             'coffeeOfTheDay' => $coffeeOfTheDay,
-            'username' => Auth::user()->user_firstname
+            'username' => Auth::user()->user_firstname,
+            'search' => $request->search ?? '',
+            'sort' => $request->sort ?? 'order_id DESC'
         ]);
     }
 
@@ -322,15 +252,51 @@ class AdminController extends Controller
         $request->validate([
             'order_id' => 'required|exists:orders,order_id',
             'order_status' => 'required|in:pending,preparing,ready,completed,cancelled',
-            'order_payment_status' => 'required|in:unpaid,paid',
+            'payment_status' => 'nullable|in:paid,unpaid',
+            'amount_paid' => 'nullable|numeric',
         ]);
 
-        Order::where('order_id', $request->order_id)->update([
+        $updateData = [
             'order_status' => $request->order_status,
-            'order_payment_status' => $request->order_payment_status,
-        ]);
+        ];
 
-        return redirect()->route('admin.orders')->with('success', 'Order updated successfully.');
+        if ($request->payment_status === 'paid' && $request->amount_paid) {
+            $updateData['order_payment_status'] = 'paid';
+        }
+
+        Order::where('order_id', $request->order_id)->update($updateData);
+
+        return redirect()->route('barista.orders')->with('success', 'Order updated successfully.');
+    }
+
+    public function getOrderDetails($id)
+    {
+        $order = Order::with(['user', 'orderItems.product'])
+            ->where('order_id', $id)
+            ->first();
+
+        if ($order) {
+            // Transform to match JSON structure expected by frontend
+            $response = [
+                'order_id' => $order->order_id,
+                'customer_name' => $order->user->user_firstname . ' ' . $order->user->user_lastname,
+                'order_createdat' => $order->order_createdat,
+                'order_payment_method' => $order->order_payment_method,
+                'order_total' => $order->order_total,
+                'items' => $order->orderItems->map(function($item) {
+                    return [
+                        'product_name' => $item->product->product_name,
+                        'orderitem_quantity' => $item->orderitem_quantity,
+                        'orderitem_price' => $item->orderitem_price,
+                        'orderitem_subtotal' => $item->orderitem_subtotal,
+                    ];
+                })
+            ];
+
+            return response()->json($response);
+        }
+
+        return response()->json(['error' => 'Order not found'], 404);
     }
 
     // --- SETTINGS ---
@@ -340,7 +306,7 @@ class AdminController extends Controller
         $user = Auth::user();
         $coffeeOfTheDay = $this->getCoffeeOfTheDay();
 
-        return view('admin.settings', [
+        return view('barista.settings', [
             'user' => $user,
             'coffeeOfTheDay' => $coffeeOfTheDay,
             'username' => $user->user_firstname
@@ -357,10 +323,8 @@ class AdminController extends Controller
             'user_address' => 'nullable|string',
         ]);
 
-        $user = Auth::user();
-        // The user object from Auth::user() is already an Eloquent model instance
-        // but let's make sure we update the fresh instance or current one.
         /** @var User $user */
+        $user = Auth::user();
         $user->update([
             'user_firstname' => $request->user_firstname,
             'user_lastname' => $request->user_lastname,
@@ -369,27 +333,47 @@ class AdminController extends Controller
             'user_address' => $request->user_address,
         ]);
 
-        return redirect()->route('admin.settings')->with('success', 'Profile updated successfully.');
+        return redirect()->route('barista.settings')->with('success', 'Profile updated successfully.');
     }
 
     public function changePassword(Request $request)
     {
         $request->validate([
             'current_password' => 'required',
-            'new_password' => 'required|string|min:6|confirmed',
+            'new_password' => 'required|string|min:6|confirmed', // 'confirmed' looks for new_password_confirmation
         ]);
 
+        /** @var User $user */
         $user = Auth::user();
 
         if (!Hash::check($request->current_password, $user->user_password)) {
             return back()->withErrors(['current_password' => 'Incorrect current password.']);
         }
 
-        /** @var User $user */
         $user->update([
             'user_password' => Hash::make($request->new_password),
         ]);
 
-        return redirect()->route('admin.settings')->with('success', 'Password changed successfully.');
+        return redirect()->route('barista.settings')->with('success', 'Password changed successfully.');
+    }
+
+    // Helper to get consistent Coffee of the Day per session
+    private function getCoffeeOfTheDay()
+    {
+        $productId = session('coffee_of_the_day_id');
+        $product = null;
+
+        if ($productId) {
+            $product = Product::find($productId);
+        }
+
+        if (!$product) {
+            $product = Product::inRandomOrder()->first();
+            if ($product) {
+                session(['coffee_of_the_day_id' => $product->product_id]);
+            }
+        }
+
+        return $product;
     }
 }

@@ -1,0 +1,81 @@
+/* Settings Page Specific Styles */
+.settings-container {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 2rem;
+}
+
+.tab-link {
+  padding: 1rem 1.5rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #888;
+  border-bottom: 3px solid transparent;
+}
+
+.tab-link.active {
+  color: #333;
+  border-bottom-color: #333;
+}
+
+.tab-content {
+  padding: 1rem;
+}
+
+.tab-content h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.tab-content form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.tab-content form input,
+.tab-content form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.tab-content form button {
+  width: auto;
+  padding: 0.75rem 2rem;
+  background-color: #b87333;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.tab-content form button:hover {
+  background-color: #9a622a;
+}
+
+.back-to-dashboard-btn {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.back-to-dashboard-btn:hover {
+  color: #000;
+}

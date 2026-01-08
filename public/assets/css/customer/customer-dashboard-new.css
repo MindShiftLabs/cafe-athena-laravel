@@ -1,0 +1,389 @@
+/* General Body Styles */
+body {
+  font-family: "Inter", sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+/* Main container */
+.main-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .main-container {
+    grid-template-columns: 3fr 1fr;
+    padding: 2rem;
+  }
+}
+
+/* Header */
+.main-header {
+  background-color: #fff;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.search-bar {
+  flex-grow: 1;
+  margin: 0 2rem;
+  max-width: 1000px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 2rem;
+  border: 1px solid #ddd;
+  background-color: #f5f5f5;
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Reduced gap */
+  cursor: pointer;
+  position: relative; /* For dropdown positioning */
+}
+
+.dropdown-icon {
+  width: 20px;
+  height: 20px;
+  color: #666;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 120%; /* Position below the profile section */
+  right: 0;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 150px;
+  overflow: hidden;
+  z-index: 20;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: #333;
+  text-decoration: none !important;
+}
+
+.logout-link {
+  color: #d32f2f !important; /* A strong red color */
+}
+
+.logout-link:hover {
+  background-color: #ffebee !important; /* A light red for hover */
+  color: #d32f2f !important;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f5f5f5;
+  text-decoration: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.no-orders {
+  text-align: center;
+  padding: 4rem 0;
+  color: #888;
+  grid-column: 1 / -1; /* Span all columns in the grid */
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Checkout Option Styles */
+.checkout-options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.option-box {
+  padding: 1rem;
+  border: 2px solid #eee;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  text-align: center;
+}
+
+.option-box.selected {
+  border-color: #333;
+  background-color: #f5f5f5;
+}
+
+.confirm-options-btn {
+  width: 100%;
+  padding: 1rem;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin-top: 2rem;
+  font-size: 1rem;
+}
+
+.confirm-options-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.back-to-options-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.back-to-options-btn:hover {
+  background-color: #e0e0e0;
+}
+.profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Menu Section */
+.menu-section {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+}
+
+.categories {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+}
+
+.category-btn {
+  padding: 0.5rem 1.5rem;
+  border-radius: 2rem;
+  background-color: #eee;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.category-btn.active {
+  background-color: #333;
+  color: #fff;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.menu-card {
+  border: 1px solid #eee;
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: box-shadow 0.3s;
+}
+
+.menu-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.menu-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.menu-card-content {
+  padding: 1rem;
+}
+
+.menu-card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.menu-card-price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #e53e3e;
+}
+
+/* Cart Section */
+.cart-section {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  position: sticky;
+  top: 100px;
+}
+
+.cart-items {
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.cart-total {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Use space-between to push buttons to the sides */
+  margin-top: 1rem;
+}
+
+.quantity-btn {
+  background-color: #b87333;
+  color: white;
+  border: none;
+  cursor: pointer;
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* Prevent buttons from shrinking */
+}
+
+.quantity-display {
+  font-size: 1.2rem;
+  font-weight: 700; /* Bolder */
+  padding: 0 0.5rem; /* Add some horizontal padding */
+  flex-grow: 1; /* Allow the number to take up space */
+  text-align: center;
+}
+
+.add-to-cart-btn,
+.confirm-options-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #b87333;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.checkout-btn {
+  width: 100%;
+  padding: 1rem;
+  background-color: #b87333;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.add-to-cart-btn:hover,
+.quantity-btn:hover,
+.checkout-btn:hover,
+.confirm-options-btn:hover {
+  background-color: #9a622a;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sidebar-logo {
+  height: 40px;
+}
+
+.sidebar-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.menu-card.out-of-stock {
+  opacity: 0.6;
+}
+
+.menu-card.out-of-stock .add-to-cart-btn {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
