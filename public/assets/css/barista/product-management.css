@@ -1,0 +1,147 @@
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 15px;
+  color: white;
+  font-weight: 500;
+  font-size: 12px;
+  cursor: pointer;
+  user-select: none;
+  text-transform: capitalize;
+  display: inline-block;
+  min-width: 80px;
+  text-align: center;
+}
+
+.status-badge.status-available {
+  background-color: #2e7d32;
+}
+
+.status-badge.status-unavailable {
+  background-color: #c62828;
+}
+
+.action-links a {
+  color: var(--coffee-medium);
+  text-decoration: none;
+  margin-right: 10px;
+  font-weight: 600;
+}
+
+.action-links a:hover {
+  color: var(--coffee-dark);
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.header-actions form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.header-actions input,
+.header-actions select {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.header-actions button {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.header-actions button:hover {
+  background-color: var(--primary-text-color);
+}
+
+.header-actions .add-btn {
+  background-color: var(--accent-color);
+}
+
+.product-table-container {
+  background-color: var(--background-white);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.product-table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.product-table-container th,
+.product-table-container td {
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.product-table-container th {
+  font-weight: 600;
+  color: #6c757d;
+}
+
+.product-table-container tr:last-child td {
+  border-bottom: none;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #28a745;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
