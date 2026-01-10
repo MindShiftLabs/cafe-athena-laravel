@@ -67,7 +67,7 @@ class CustomerController extends Controller
                 // Convert numeric types and adjust image path if necessary
                 $product->price = (float) $product->price;
                 $product->hasStock = ($product->product_status === 'available');
-                unset($product->product_status); 
+                unset($product->product_status);
                 return $product;
             });
 
@@ -77,7 +77,7 @@ class CustomerController extends Controller
     public function getOrderHistory()
     {
         $user = Auth::user();
-        
+
         $orders = Order::where('user_id', $user->user_id)
             ->select('order_id', 'order_status', 'order_type', 'order_total', 'order_createdat')
             ->orderBy('order_createdat', 'desc')
@@ -106,7 +106,7 @@ class CustomerController extends Controller
             $order_total = $totals['finalTotal'];
             $order_payment_method = strtolower($checkout['payment']);
             $order_delivery_address = $checkout['address'] ?? null;
-            
+
             $order_payment_status = 'unpaid';
             if ($order_payment_method === 'card') {
                 $order_payment_status = 'paid';
@@ -202,7 +202,6 @@ class CustomerController extends Controller
             'new_password' => 'required|string|min:6|confirmed',
         ]);
 
-        /** @var User $user */
         $user = Auth::user();
 
         if (!Hash::check($request->current_password, $user->user_password)) {

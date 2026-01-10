@@ -40,15 +40,6 @@ class BaristaController extends Controller
             ->limit(5)
             ->get();
 
-        // Transform for view if needed, but Eloquent models work directly in Blade
-        // We'll pass the models directly.
-        // Note: The view expects user properties on the order object if it was a join.
-        // With Eloquent 'with', we access via $order->user->user_firstname.
-        // Let's quickly check the view to see if we need to flatten it or update the view.
-        // resources/views/barista/dashboard.blade.php uses $order->user_firstname.
-        // We should map it to keep the view working without changes, or update the view.
-        // Updating the controller to output flat structure is safer for now to avoid view changes.
-        
         $recentOrdersFlat = $recentOrders->map(function($order) {
             $order->user_firstname = $order->user->user_firstname;
             $order->user_lastname = $order->user->user_lastname;
@@ -326,10 +317,9 @@ class BaristaController extends Controller
     {
         $request->validate([
             'current_password' => 'required',
-            'new_password' => 'required|string|min:6|confirmed', // 'confirmed' looks for new_password_confirmation
+            'new_password' => 'required|string|min:6|confirmed',
         ]);
 
-        /** @var User $user */
         $user = Auth::user();
 
         if (!Hash::check($request->current_password, $user->user_password)) {
