@@ -6,17 +6,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected $table = 'user';
     protected $primaryKey = 'user_id';
 
     const CREATED_AT = 'user_createdat';
     const UPDATED_AT = 'user_updatedat';
+    const DELETED_AT = 'user_deletedat';
 
     /**
      * The attributes that are mass assignable.

@@ -4,16 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'product';
     protected $primaryKey = 'product_id';
 
     const CREATED_AT = 'product_createdat';
     const UPDATED_AT = 'product_updatedat';
+    const DELETED_AT = 'product_deletedat';
 
     protected $fillable = [
         'product_name',

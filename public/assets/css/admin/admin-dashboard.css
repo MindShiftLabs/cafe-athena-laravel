@@ -306,6 +306,31 @@ header p {
   background-color: var(--primary-text-color);
 }
 
+.button-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.trash-toggle-btn {
+  background-color: transparent !important;
+  color: #f44336 !important;
+  border: 1px solid #f44336 !important;
+}
+
+.trash-toggle-btn:hover {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+.secondary-btn {
+  background-color: var(--text-muted) !important;
+}
+
+.secondary-btn:hover {
+  background-color: var(--primary-text-color) !important;
+}
+
 .no-orders {
   text-align: center;
   padding: 20px;

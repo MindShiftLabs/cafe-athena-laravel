@@ -53,16 +53,30 @@
 
   <div class="main-content">
     <header>
-      <h1>User Management</h1>
+      <h1>User Management {{ $view === 'trash' ? '(Deleted)' : '' }}</h1>
       <p>Here you can manage all the users of the application.</p>
       <div class="header-actions">
         <form action="{{ route('admin.users') }}" method="GET">
+          <input type="hidden" name="view" value="{{ $view }}">
           <input type="text" name="search" placeholder="Search users..."
             value="{{ request('search') }}">
           <button type="submit">Search</button>
-          <button type="button" class="clear-btn" onclick="window.location.href='{{ route('admin.users') }}'">Clear</button>
+          <button type="button" class="clear-btn" onclick="window.location.href='{{ route('admin.users', ['view' => $view]) }}'">Clear</button>
         </form>
-        <button type="button" id="addUserBtn">Add New User</button>
+        <div class="button-group">
+            @if($view === 'trash')
+                <button type="button" class="secondary-btn" onclick="window.location.href='{{ route('admin.users') }}'">
+                    <i class="fas fa-arrow-left"></i> View Active
+                </button>
+            @else
+                <button type="button" class="trash-toggle-btn" onclick="window.location.href='{{ route('admin.users', ['view' => 'trash']) }}'">
+                    <i class="fas fa-trash-alt"></i> View Trash
+                </button>
+                <button type="button" id="addUserBtn">
+                    <i class="fas fa-plus"></i> Add New User
+                </button>
+            @endif
+        </div>
       </div>
     </header>
 
@@ -99,8 +113,15 @@
                 <td>{{ $user->user_role }}</td>
                 <td>{{ $user->user_createdat }}</td>
                 <td class="action-links">
-                  <a href="#" class="edit-link">Edit</a>
-                  <a href="#" class="delete-link">Delete</a>
+                  @if($view === 'trash')
+                     <form action="{{ route('admin.users.restore', $user->user_id) }}" method="POST" style="display:inline;">
+                        @csrf
+                        <button type="submit" class="edit-link" style="border:none; background:none; cursor:pointer;">Restore</button>
+                     </form>
+                  @else
+                    <a href="#" class="edit-link">Edit</a>
+                    <a href="#" class="delete-link">Delete</a>
+                  @endif
                 </td>
               </tr>
             @endforeach

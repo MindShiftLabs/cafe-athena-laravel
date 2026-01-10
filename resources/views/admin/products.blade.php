@@ -56,16 +56,30 @@
 
   <div class="main-content">
     <header>
-      <h1>Product Management</h1>
+      <h1>Product Management {{ $view === 'trash' ? '(Deleted)' : '' }}</h1>
       <p>Here you can manage all the products of the application.</p>
       <div class="header-actions">
         <form action="{{ route('admin.products') }}" method="GET">
+          <input type="hidden" name="view" value="{{ $view }}">
           <input type="text" name="search" placeholder="Search products..."
             value="{{ request('search') }}">
           <button type="submit">Search</button>
-          <button type="button" class="clear-btn" onclick="window.location.href='{{ route('admin.products') }}'">Clear</button>
+          <button type="button" class="clear-btn" onclick="window.location.href='{{ route('admin.products', ['view' => $view]) }}'">Clear</button>
         </form>
-        <button type="button" id="addProductBtn">Add New Product</button>
+        <div class="button-group">
+            @if($view === 'trash')
+                <button type="button" class="secondary-btn" onclick="window.location.href='{{ route('admin.products') }}'">
+                    <i class="fas fa-arrow-left"></i> View Active
+                </button>
+            @else
+                <button type="button" class="trash-toggle-btn" onclick="window.location.href='{{ route('admin.products', ['view' => 'trash']) }}'">
+                    <i class="fas fa-trash-alt"></i> View Trash
+                </button>
+                <button type="button" id="addProductBtn">
+                    <i class="fas fa-plus"></i> Add New Product
+                </button>
+            @endif
+        </div>
       </div>
     </header>
 
@@ -107,15 +121,22 @@
                 <td>
                   <label class="switch">
                     {{-- Mapping 'available' to checked --}}
-                    <input type="checkbox" class="stock-toggle" data-id="{{ $product->product_id }}" {{ $product->product_status === 'available' ? 'checked' : '' }}>
+                    <input type="checkbox" class="stock-toggle" data-id="{{ $product->product_id }}" {{ $product->product_status === 'available' ? 'checked' : '' }} {{ $view === 'trash' ? 'disabled' : '' }}>
                     <span class="slider"></span>
                   </label>
                 </td>
                 <td>{{ $product->product_category }}</td>
                 <td>{{ $product->product_createdat }}</td>
                 <td class="action-links">
-                  <a href="#" class="edit-link">Edit</a>
-                  <a href="#" class="delete-link">Delete</a>
+                  @if($view === 'trash')
+                      <form action="{{ route('admin.products.restore', $product->product_id) }}" method="POST" style="display:inline;">
+                        @csrf
+                        <button type="submit" class="edit-link" style="border:none; background:none; cursor:pointer;">Restore</button>
+                     </form>
+                  @else
+                      <a href="#" class="edit-link">Edit</a>
+                      <a href="#" class="delete-link">Delete</a>
+                  @endif
                 </td>
               </tr>
             @endforeach

@@ -146,20 +146,6 @@ class BaristaController extends Controller
         return redirect()->route('barista.products')->with('success', 'Product updated successfully.');
     }
 
-    public function destroyProduct($id)
-    {
-        $product = Product::findOrFail($id);
-
-        if ($product) {
-            if (file_exists(public_path($product->product_image))) {
-                @unlink(public_path($product->product_image));
-            }
-            $product->delete();
-        }
-
-        return redirect()->route('barista.products')->with('success', 'Product deleted successfully.');
-    }
-
     public function toggleProductStock(Request $request)
     {
         $productId = $request->input('product_id');

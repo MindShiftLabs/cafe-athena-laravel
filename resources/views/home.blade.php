@@ -14,7 +14,7 @@
     <!-- Styles -->
     {{-- Main Home CSS --}}
     <link rel="stylesheet" href="{{ asset('assets/css/home.css') }}">
-    
+
 </head>
 <body>
 

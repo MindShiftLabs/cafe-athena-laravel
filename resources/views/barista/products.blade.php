@@ -110,7 +110,6 @@
                 <td>{{ \Carbon\Carbon::parse($product->product_createdat)->format('Y-m-d H:i:s') }}</td>
                 <td class="action-links">
                   <a href="#" class="edit-link">Edit</a>
-                  <a href="#" class="delete-link">Delete</a>
                 </td>
               </tr>
             @endforeach
@@ -193,26 +192,12 @@
     </div>
   </div>
 
-  <!-- Delete Product Modal -->
-  <div id="deleteProductModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Delete Product</h2>
-      <p>Are you sure you want to delete this product?</p>
-      <form id="deleteProductForm" action="" method="POST">
-        @csrf
-        @method('DELETE')
-        <button type="submit">Delete</button>
-        <button type="button" class="close-modal">Cancel</button>
-      </form>
-    </div>
   </div>
 
   <script>
     // Get the modals
     var addProductModal = document.getElementById("addProductModal");
     var editProductModal = document.getElementById("editProductModal");
-    var deleteProductModal = document.getElementById("deleteProductModal");
 
     // Get the button that opens the modal
     var addProductBtn = document.getElementById("addProductBtn");
@@ -230,22 +215,19 @@
       spans[i].onclick = function () {
         addProductModal.style.display = "none";
         editProductModal.style.display = "none";
-        deleteProductModal.style.display = "none";
       }
     }
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
-      if (event.target == addProductModal || event.target == editProductModal || event.target == deleteProductModal) {
+      if (event.target == addProductModal || event.target == editProductModal) {
         addProductModal.style.display = "none";
         editProductModal.style.display = "none";
-        deleteProductModal.style.display = "none";
       }
     }
 
-    // Handle edit and delete button clicks
+    // Handle edit button clicks
     var editLinks = document.getElementsByClassName("edit-link");
-    var deleteLinks = document.getElementsByClassName("delete-link");
 
     for (var i = 0; i < editLinks.length; i++) {
       editLinks[i].onclick = function (e) {
@@ -280,22 +262,11 @@
       }
     }
 
-    for (var i = 0; i < deleteLinks.length; i++) {
-      deleteLinks[i].onclick = function (e) {
-        e.preventDefault();
-        deleteProductModal.style.display = "flex";
-        var row = this.parentNode.parentNode;
-        var id = row.cells[0].innerHTML.trim();
-        
-        var form = document.getElementById("deleteProductForm");
-        form.action = "{{ route('barista.products.destroy', ['id' => 'ID_PLACEHOLDER']) }}".replace('ID_PLACEHOLDER', id);
-      }
-    }
-
     var closeButtons = document.getElementsByClassName("close-modal");
     for (var i = 0; i < closeButtons.length; i++) {
       closeButtons[i].onclick = function () {
-        deleteProductModal.style.display = "none";
+        // Only edit modal has close-modal button now
+        editProductModal.style.display = "none";
       }
     }
 

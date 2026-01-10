@@ -55,6 +55,10 @@ class AdminController extends Controller
     {
         $query = User::query();
 
+        if ($request->has('view') && $request->view === 'trash') {
+            $query->onlyTrashed();
+        }
+
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -71,8 +75,15 @@ class AdminController extends Controller
         return view('admin.users', [
             'users' => $users,
             'coffeeOfTheDay' => $coffeeOfTheDay,
-            'username' => Auth::user()->user_firstname
+            'username' => Auth::user()->user_firstname,
+            'view' => $request->view ?? 'active'
         ]);
+    }
+
+    public function restoreUser($id)
+    {
+        User::withTrashed()->find($id)->restore();
+        return redirect()->route('admin.users', ['view' => 'trash'])->with('success', 'User restored successfully.');
     }
 
     public function storeUser(Request $request)
@@ -129,10 +140,16 @@ class AdminController extends Controller
     {
         $query = Product::query();
 
+        if ($request->has('view') && $request->view === 'trash') {
+            $query->onlyTrashed();
+        }
+
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where('product_name', 'like', "%{$search}%")
+            $query->where(function($q) use ($search) {
+                $q->where('product_name', 'like', "%{$search}%")
                   ->orWhere('product_description', 'like', "%{$search}%");
+            });
         }
 
         $products = $query->orderBy('product_id', 'desc')->get();
@@ -142,8 +159,15 @@ class AdminController extends Controller
         return view('admin.products', [
             'products' => $products,
             'coffeeOfTheDay' => $coffeeOfTheDay,
-            'username' => Auth::user()->user_firstname
+            'username' => Auth::user()->user_firstname,
+            'view' => $request->view ?? 'active'
         ]);
+    }
+
+    public function restoreProduct($id)
+    {
+        Product::withTrashed()->find($id)->restore();
+        return redirect()->route('admin.products', ['view' => 'trash'])->with('success', 'Product restored successfully.');
     }
 
     public function storeProduct(Request $request)
@@ -210,9 +234,6 @@ class AdminController extends Controller
         $product = Product::findOrFail($id);
 
         if ($product) {
-            if (file_exists(public_path($product->product_image))) {
-                @unlink(public_path($product->product_image));
-            }
             $product->delete();
         }
 
