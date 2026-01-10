@@ -79,7 +79,7 @@
               value="{{ old('user_lastname', $user->user_lastname) }}" required>
 
             <label for="email">Email:</label>
-            <input type="email" id="email" value="{{ $user->user_email }}" disabled readonly style="background-color: #e9ecef; cursor: not-allowed;">
+            <input type="email" id="email" value="{{ $user->user_email }}" disabled readonly>
 
             <label for="birthday">Birthday:</label>
             <input type="date" id="birthday" name="user_birthday"

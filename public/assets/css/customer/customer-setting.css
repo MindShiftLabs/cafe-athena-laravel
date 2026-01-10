@@ -54,6 +54,14 @@
   margin-bottom: 1.5rem;
 }
 
+.tab-content form input:disabled,
+.tab-content form input[readonly] {
+  background-color: #f0f0f0;
+  color: #888;
+  cursor: not-allowed;
+  border-color: #e0e0e0;
+}
+
 .tab-content form button {
   width: auto;
   padding: 0.75rem 2rem;

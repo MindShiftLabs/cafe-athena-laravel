@@ -72,6 +72,7 @@
 }
 
 .settings-container form input[type="text"],
+.settings-container form input[type="email"],
 .settings-container form input[type="date"],
 .settings-container form input[type="password"],
 .settings-container form textarea {
@@ -82,6 +83,14 @@
   border-radius: 5px;
   box-sizing: border-box;
   transition: border-color 0.3s;
+}
+
+.settings-container form input:disabled,
+.settings-container form input[readonly] {
+  background-color: #f0f0f0;
+  color: #888;
+  cursor: not-allowed;
+  border-color: #e0e0e0;
 }
 
 .settings-container form input[type="text"]:focus,
